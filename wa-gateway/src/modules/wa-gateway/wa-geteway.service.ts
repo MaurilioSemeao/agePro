@@ -1,4 +1,5 @@
 import { Client, LocalAuth } from "whatsapp-web.js";
+import qrcode from "qrcode-terminal"
 import {
     CreateSessionRequest,
     SessionStatusResponse,
@@ -17,7 +18,10 @@ export class WaSessionService{
         });
         client.initialize();
         this._sessions.set(payload.name, client);
-        client.on('qr', qr => console.log('Qr code', qr));
+        client.on('qr', (qr) => {
+            console.log('scan this QR:');
+            qrcode.generate(qr, { small: true });
+        });
         client.on('ready', () => console.log(`Session ${payload.name} ready`));
         return { id: payload.name, connected: false };
     };
