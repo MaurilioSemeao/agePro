@@ -5,22 +5,6 @@ import {
     GatewaySendMessageResponse
 } from "./messaging.types";
 
-
-// const WA_GATEWAY_REQUEST = process.env.WA_GATEWAY_REQUEST as string;
-
-// export const sendMessage = async (
-//     data: SendMessageRequest
-// ): Promise<SendMessageResponse> => {
-//     const response = await axios.post<GatewaySendMessageResponse>(
-//         `${WA_GATEWAY_REQUEST}/send`,
-//         data
-//     );
-
-//     return{
-//         success: response.data.status === 'sent',
-//     };
-// };
-
 export class MessagingService{
     private gatewayUrl: string;
 

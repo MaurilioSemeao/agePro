@@ -1,19 +1,6 @@
 import { Request, Response } from 'express';
-
 import { MessagingService } from './messaging.service';
 import { SendMessageRequest } from './messaging.types';
-
-// export const sendMessageController = async (req: Request, res: Response) =>{
-//     try{
-//         const body: SendMessageRequest = req.body;
-//         const result = await sendMessage(body);
-
-//         return res.status(200).json(body);
-//     }catch(error){
-//         return res.status(500).json({ error: 'Failed to send message' });
-//     }
-// };
-
 
 export class MessagingController {
     private messagingService: MessagingService;
