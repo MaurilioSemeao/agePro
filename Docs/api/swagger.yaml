@@ -1,0 +1,282 @@
+openapi: 3.0.3
+
+info:
+  title: WhatsApp Reminder SaaS API
+  version: 1.0.0
+  description: |
+    API para gerenciamento de pacientes, consultas e envio automático de lembretes via WhatsApp.
+
+servers:
+  - url: /api/v1
+
+tags:
+  - name: Auth
+    description: Autenticação e sessão do usuário
+  - name: Company
+    description: Dados da empresa (multi-tenant)
+  - name: Patients
+    description: Gestão de pacientes
+  - name: Appointments
+    description: Gestão de consultas
+  - name: Messaging
+    description: Histórico e envio de mensagens
+  - name: WhatsApp Session
+    description: Sessões do WhatsApp (QR Code, status)
+
+paths:
+
+  /auth/google:
+    post:
+      tags: [Auth]
+      summary: Autenticação com Google
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idToken:
+                  type: string
+      responses:
+        '200':
+          description: Usuário autenticado
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Retorna usuário autenticado
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dados do usuário
+
+  /companies/me:
+    get:
+      tags: [Company]
+      summary: Retorna dados da empresa do usuário
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dados da empresa
+
+  /patients:
+    post:
+      tags: [Patients]
+      summary: Cria um paciente
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientInput'
+      responses:
+        '201':
+          description: Paciente criado
+
+    get:
+      tags: [Patients]
+      summary: Lista pacientes
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: size
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de pacientes
+
+  /patients/{id}:
+    get:
+      tags: [Patients]
+      summary: Busca paciente por ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Paciente encontrado
+
+    put:
+      tags: [Patients]
+      summary: Atualiza paciente
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientInput'
+      responses:
+        '200':
+          description: Paciente atualizado
+
+    delete:
+      tags: [Patients]
+      summary: Remove paciente
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '204':
+          description: Paciente removido
+
+  /appointments:
+    post:
+      tags: [Appointments]
+      summary: Cria consulta
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentInput'
+      responses:
+        '201':
+          description: Consulta criada
+
+    get:
+      tags: [Appointments]
+      summary: Lista consultas
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de consultas
+
+  /appointments/{id}:
+    put:
+      tags: [Appointments]
+      summary: Atualiza consulta
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentInput'
+      responses:
+        '200':
+          description: Consulta atualizada
+
+    delete:
+      tags: [Appointments]
+      summary: Remove consulta
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '204':
+          description: Consulta removida
+
+  /messages:
+    get:
+      tags: [Messaging]
+      summary: Histórico de mensagens
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de mensagens
+
+  /sessions:
+    post:
+      tags: [WhatsApp Session]
+      summary: Cria sessão WhatsApp
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Sessão criada
+
+    delete:
+      tags: [WhatsApp Session]
+      summary: Desconecta sessão WhatsApp
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Sessão encerrada
+
+  /sessions/status:
+    get:
+      tags: [WhatsApp Session]
+      summary: Status da sessão WhatsApp
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Status da sessão
+
+  /sessions/{id}/qr:
+    get:
+      tags: [WhatsApp Session]
+      summary: Retorna QR Code da sessão
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: QR Code retornado
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+
+    PatientInput:
+      type: object
+      required: [name, phone]
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+
+    AppointmentInput:
+      type: object
+      required: [patientId, scheduledAt]
+      properties:
+        patientId:
+          type: string
+          format: uuid
+        scheduledAt:
+          type: string
+          format: date-time
+        notes:
+          type: string

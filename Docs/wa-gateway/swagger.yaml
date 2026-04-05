@@ -1,0 +1,91 @@
+openapi: 3.0.3
+
+info:
+  title: WhatsApp Gateway API
+  version: 1.0.0
+  description: |
+    Serviço responsável pela comunicação com o WhatsApp Web.
+    Gerencia sessões, envio de mensagens e QR Code.
+
+servers:
+  - url: http://localhost:3001
+
+tags:
+  - name: Messaging
+    description: Envio de mensagens via WhatsApp
+  - name: Session
+    description: Gerenciamento de sessão do WhatsApp
+
+paths:
+
+  /send:
+    post:
+      tags: [Messaging]
+      summary: Envia mensagem via WhatsApp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageInput'
+      responses:
+        '200':
+          description: Mensagem enviada com sucesso
+        '500':
+          description: Erro ao enviar mensagem
+
+  /sessions:
+    post:
+      tags: [Session]
+      summary: Cria uma nova sessão do WhatsApp
+      responses:
+        '200':
+          description: Sessão criada
+
+    delete:
+      tags: [Session]
+      summary: Encerra sessão atual
+      responses:
+        '204':
+          description: Sessão encerrada
+
+  /sessions/status:
+    get:
+      tags: [Session]
+      summary: Retorna status da sessão
+      responses:
+        '200':
+          description: Status atual da sessão
+
+  /sessions/{id}/qr:
+    get:
+      tags: [Session]
+      summary: Retorna QR Code da sessão
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: QR Code retornado
+
+components:
+
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+
+  schemas:
+
+    SendMessageInput:
+      type: object
+      required: [to, message]
+      properties:
+        to:
+          type: string
+          example: "5511999999999"
+        message:
+          type: string
+          example: "Sua consulta é amanhã às 14h"
