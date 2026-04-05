@@ -1,10 +1,13 @@
 import { Router } from "express";
+import { waSessionRouter } from '../modules/wa-gateway';
+
 
 const router = Router();
 
 router.get('/health', (req, res) =>{
     res.json({ status: 'wa gateway ok' });
 } );
+
 
 router.post('/send', (req, res)=> {
     const {to, message} = req.body;
@@ -22,5 +25,7 @@ router.post('/send', (req, res)=> {
     });
 
 } );
+
+router.use('/wa', waSessionRouter);
 
 export default router;

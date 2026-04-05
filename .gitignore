@@ -35,3 +35,11 @@ docker-compose.override.yml
 
 # Misc
 coverage/
+
+# WA Gateway - sessão WhatsApp
+wa-gateway/.wwebjs_auth/
+wa-gateway/.wwebjs_cache/
+
+# Arquivos locais de teste
+preview.html
+todo_checklist.html

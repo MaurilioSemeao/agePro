@@ -4,6 +4,8 @@ import {
     SendMessageResponse,
     GatewaySendMessageResponse
 } from "./messaging.types";
+import { MessagingError } from './errors/messaging.error';
+
 
 export class MessagingService{
     private gatewayUrl: string;
@@ -13,12 +15,28 @@ export class MessagingService{
     };
 
     public async sendMessage(payload: SendMessageRequest): Promise<SendMessageResponse>{
-        const response = await axios.post<GatewaySendMessageResponse>(
+        try{
+            const response = await axios.post<GatewaySendMessageResponse>(
             `${this.gatewayUrl}/send`, payload
         );
-        console.log('Resposta do gateway:', response.data);
+
+        if(response.data.status !== 'sent'){
+            throw new MessagingError('Failed to send message through gateway', 400);
+        }
+
         return {
          success: response.data.status === 'sent'  ,  
         };
+
+        }catch(err: unknown){
+            if(axios.isAxiosError(err)){
+                throw new MessagingError(err.message, err.response?.status || 500);
+            }
+            throw new MessagingError('An unexpected error occurred', 500);
+        }
+
+
+        
+        
     };
 };
