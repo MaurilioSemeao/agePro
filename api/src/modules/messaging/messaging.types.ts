@@ -1,4 +1,5 @@
 export interface SendMessageRequest {
+    sessionId: string;
     to: string;
     message: string;
 }
@@ -8,5 +9,5 @@ export interface SendMessageResponse{
 }
 
 export interface GatewaySendMessageResponse {
-    status: string;
+    success: boolean;
 }

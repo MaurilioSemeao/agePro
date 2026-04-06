@@ -17,15 +17,16 @@ export class MessagingService{
     public async sendMessage(payload: SendMessageRequest): Promise<SendMessageResponse>{
         try{
             const response = await axios.post<GatewaySendMessageResponse>(
-            `${this.gatewayUrl}/send`, payload
+            `${this.gatewayUrl}/api/wa/messages/send`,
+                {
+                    sessionId: 'session1',
+                    to: payload.to,
+                    message: payload.message,
+                }
         );
 
-        if(response.data.status !== 'sent'){
-            throw new MessagingError('Failed to send message through gateway', 400);
-        }
-
         return {
-         success: response.data.status === 'sent'  ,  
+         success: response.data.success,  
         };
 
         }catch(err: unknown){
