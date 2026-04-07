@@ -17,13 +17,15 @@ export class MessagingController {
             const result = await this.messagingService.sendMessage(payload);
             console.log('Message send result:', result);
             if(!result.success){
-                return res.status(400).json(result);
+                return res.status(400).json({
+                    success: false,
+                    error: 'Failed to send message through gateway',
+                });
             }
 
             return res.status(200).json({
                 success: true,
-                to: payload.to,
-                message: payload.message,
+                data: result
             });
 
         } catch (error: unknown) {
