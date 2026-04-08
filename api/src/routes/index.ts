@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import messagingRoutes from '../modules/messaging/messaging.routes';
 import { companyRouters } from '../modules/company';
+import { patientRouters } from '../modules/patient';
 
 
 const router: Router = Router();
@@ -12,5 +13,6 @@ router.get('/health', (req, res) =>{
 
 router.use(messagingRoutes)
 router.use(companyRouters)
+router.use(patientRouters)
 
 export default router;

@@ -36,7 +36,7 @@ export class CompanyController {
         }
     }
 
-    findAllCompanies = async (req: Request, res: Response): Promise<Response> => {
+        findAllCompanies = async (req: Request, res: Response): Promise<Response> => {
         console.log("Received request to fetch all companies");
         try {
             const result = await this._companyService.getAllCompanies();
