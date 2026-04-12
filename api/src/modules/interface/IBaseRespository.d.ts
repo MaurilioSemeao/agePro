@@ -5,3 +5,8 @@ export interface IBaseRepository<T> {
     update(id: string, item: T): Promise<T | null>;
     delete(id: string): Promise<boolean>;
 }
+
+export interface IBaseRepositoryAppoitment<T> extends IBaseRepository<T> {
+    findAllByCompany(companyId: string): Promise<T[]>;
+    updateStatus(id: string, appoitmentStatus:string): Promise<T | null>;
+}

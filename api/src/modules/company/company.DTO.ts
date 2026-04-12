@@ -2,10 +2,10 @@ import { ICompanyDTOResponse, CompanyDTOrequest } from "./interfaces/ICompany";
 
 
 export class CompanyDTOResponse {
-    private id: string;
-    private name: string;
-    private phone: string
-    private email: string;
+    readonly id: string;
+    readonly name: string;
+    readonly phone: string
+    readonly email: string;
     
     constructor(company: ICompanyDTOResponse){
         this.id = company.id;
@@ -17,8 +17,8 @@ export class CompanyDTOResponse {
 
 
 export class CompanyDTORequest {
-    private name: string;
-    private phone: string;
+    readonly name: string;
+    readonly phone: string;
 
     constructor(company: CompanyDTOrequest){
         this.name = company.name;

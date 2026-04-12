@@ -2,7 +2,7 @@ import { IBaseRepository } from "../interface/IBaseRespository";
 import { PrismaModel } from "../interface/IPrismaModel";
 
 export class BaseRepository<T> implements IBaseRepository<T> {
-    private _model: PrismaModel<T>;
+    protected _model: PrismaModel<T>;
 
     constructor(model: PrismaModel<T>){
         this._model = model;

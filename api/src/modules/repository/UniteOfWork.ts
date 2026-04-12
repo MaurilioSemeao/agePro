@@ -1,16 +1,20 @@
-import { Company, PrismaClient } from "@prisma/client";
-import { IBaseRepository } from "../interface/IBaseRespository";
+import { Appointment, Company, Patient, Prisma, PrismaClient } from "@prisma/client";
+import { IBaseRepository, IBaseRepositoryAppoitment } from "../interface/IBaseRespository";
 import { IUnitOfWork } from "../interface/IUnitOfWork";
 import { CompanyRepository } from "../company/company.repository";
 import { PatientRepository } from "../patient/patient.repository";
+import { AppointmentRespository } from "../appointment/appointment.repository";
 
 export class UnitOfWork implements IUnitOfWork {
-    private _companyRepository: IBaseRepository<Company> | null = null;
-    private _patientRepository: IBaseRepository<Patient> | null = null;
+    private _companyRepository!: IBaseRepository<Company>;
+    private _patientRepository!: IBaseRepository<Patient>;
+    private _appoitmnetRepository!: IBaseRepositoryAppoitment<Appointment>;
 
 
 
-    constructor(private readonly _prisma: PrismaClient){}
+    constructor(private readonly _prisma: PrismaClient){
+
+    }
 
     get company() {
         if (!this._companyRepository) {
@@ -27,6 +31,14 @@ export class UnitOfWork implements IUnitOfWork {
 
         return this._patientRepository;
 
+    }
+
+    get appoitment(){
+        if (!this._appoitmnetRepository){
+            this._appoitmnetRepository = new AppointmentRespository(this._prisma.appointment)
+        }
+
+        return this._appoitmnetRepository;
     }
 
 

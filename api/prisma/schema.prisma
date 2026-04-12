@@ -5,7 +5,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -13,20 +12,45 @@ datasource db {
 }
 
 model Company {
-  id        String    @id @default(uuid())
-  name      String
-  email     String    @unique
-  phone     String
-  patients  Patient[]
-  createdAt DateTime  @default(now())
+  id         String        @id @default(uuid())
+  name       String
+  email      String        @unique
+  phone      String
+  patients   Patient[]
+  appoitment Appointment[]
+  createdAt  DateTime      @default(now())
 }
 
 model Patient {
-  id        String   @id @default(uuid())
-  name      String
-  phone     String
-  email     String?
+  id         String        @id @default(uuid())
+  name       String
+  phone      String
+  email      String
+  appoitment Appointment[]
+  companyId  String
+  createdAt  DateTime      @default(now())
+  company    Company       @relation(fields: [companyId], references: [id])
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CANCELED
+  DONE
+}
+
+model Appointment {
+  id          String            @id @default(uuid())
+  startTime   DateTime
+  endTime     DateTime
+  description String?
+  status      AppointmentStatus @default(SCHEDULED) // SCHEDULED, CANCELED, DONE
+
+  // Relacionamentos
+  patient   Patient @relation(fields: [patientId], references: [id])
+  patientId String
+  company   Company @relation(fields: [companyId], references: [id])
   companyId String
+
   createdAt DateTime @default(now())
-  company   Company  @relation(fields: [companyId], references: [id])
+  updatedAt DateTime @updatedAt
 }
