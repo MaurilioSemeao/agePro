@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PatientService } from "./patient.service";
-import { PatientDTORequest, PatientDTOResponse } from "./patient.DTO";
+import { PatientDTORequest } from "./patient.DTO";
 
 export class PatientController {
     constructor(private readonly _patientService: PatientService){}

@@ -12,24 +12,24 @@ datasource db {
 }
 
 model Company {
-  id         String        @id @default(uuid())
-  name       String
-  email      String        @unique
-  phone      String
-  patients   Patient[]
-  appoitment Appointment[]
-  createdAt  DateTime      @default(now())
+  id          String        @id @default(uuid())
+  name        String
+  email       String        @unique
+  phone       String
+  patients    Patient[]
+  appointment Appointment[]
+  createdAt   DateTime      @default(now())
 }
 
 model Patient {
-  id         String        @id @default(uuid())
-  name       String
-  phone      String
-  email      String
-  appoitment Appointment[]
-  companyId  String
-  createdAt  DateTime      @default(now())
-  company    Company       @relation(fields: [companyId], references: [id])
+  id          String        @id @default(uuid())
+  name        String
+  phone       String
+  email       String
+  appointment Appointment[]
+  companyId   String
+  createdAt   DateTime      @default(now())
+  company     Company       @relation(fields: [companyId], references: [id])
 }
 
 enum AppointmentStatus {

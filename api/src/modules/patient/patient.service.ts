@@ -1,6 +1,7 @@
 import {PatientDTORequest, PatientDTOResponse} from "./patient.DTO";
 import { UnitOfWork } from "../repository/UniteOfWork";
 import { Patient } from "@prisma/client";
+import { PatientRepository } from "./patient.repository";
 
 export class PatientService {
     constructor(private readonly _uow: UnitOfWork){}
@@ -20,7 +21,7 @@ export class PatientService {
     }
 
     async getPatientById(id: string): Promise<PatientDTOResponse> {
-        const patient = await this._uow.patient.findById(id);
+        const patient = await (this._uow.patient as PatientRepository).findByIdWithAppointments (id);
         if (!patient) {
             throw new Error("Patient not found");
         }   
@@ -28,7 +29,7 @@ export class PatientService {
     }
 
     async getAllPatients(): Promise<PatientDTOResponse[]> {
-        const patients = await this._uow.patient.findAll();
+        const patients = await (this._uow.patient as PatientRepository).findAllWithAppointments();
         return patients.map(patient => new PatientDTOResponse(patient));
     }
 
@@ -46,5 +47,11 @@ export class PatientService {
         if (!deleted) {
             throw new Error("Patient not found");   
         }
+    }
+
+    async getPatientByIdWitAppointments(id: string): Promise<PatientDTOResponse> {
+        const patient = await (this._uow.patient as PatientRepository).findByIdWithAppointments(id);
+        if(!patient) throw new Error("Patient not found");
+        return new PatientDTOResponse(patient);
     }
 }
